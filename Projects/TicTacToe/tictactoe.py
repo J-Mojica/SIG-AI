@@ -24,12 +24,12 @@ def whoWon(state):
 '''
 def getValue(state):
     value = None
-    isWin, symbol = isTerminal(state) 
-    if(isWin and symbol == "X"):
+    terminal, symbol = isTerminal(state) 
+    if(terminal and symbol == "X"):
         value = 1
-    elif(isWin and symbol == "O"):
+    elif(terminal and symbol == "O"):
         value = -1
-    elif(isWin):
+    elif(terminal):
         value = 0
     return value
 def isTerminal(state):
@@ -61,7 +61,7 @@ def isTerminal(state):
     symbol = state[0][0]
     for i in range(len(state)):
         if(state[i][i] != symbol or symbol == None):
-            isWin = False, None
+            isWin = False
             break 
     if(isWin):
         return True, symbol
@@ -72,14 +72,19 @@ def isTerminal(state):
     j = 0
     while(i >= 0 and j < len(state)):
         if(state[i][j] != symbol or symbol == None):
-            isWin = False, None
+            isWin = False
             break 
         i -= 1
         j += 1
     if(isWin):
         return True, symbol
 
-    return False, None
+    for row in state:
+        for item in row:
+            if(item == None):
+                return False, None 
+    return True, None
+
 
 def legalActions(state):
     X = 0
@@ -103,6 +108,7 @@ def legalActions(state):
                 legal.append((nextSymbol, i, j))
     return legal
 
+
 def stateCopy(state):
     cpy = []
     i = 0
@@ -111,6 +117,7 @@ def stateCopy(state):
         for item in row:
             cpy[i].append(item)
         i += 1
+    return cpy
 
 def getSuccessor(state, action):
     symbol, i, j = action
@@ -118,34 +125,114 @@ def getSuccessor(state, action):
     newState[i][j] = symbol
     return newState
 
-def max_value(state):
+def maxValue(state):
     '''
     Doc goes here
     '''
     terminal, _ = isTerminal(state)
     if(terminal):
-        return getValue(state)
+        return getValue(state), None
     v = float("-inf")
+    action = None
+
+    for a in legalActions(state):
+        successor = getSuccessor(state, a)
+        v2, a2 = minValue(successor)
+        if(v2 > v):
+            v = v2
+            action = a
+    
+    return v, action
+
+    '''
     successors = [getSuccessor(state, action) for action in legalActions(state)]
     for successor in successors:
         v = max(v, min_value(successor))
     return v
-
-def min_value(state):
+    '''
+def minValue(state):
     terminal, _ = isTerminal(state)
     if(terminal):
-        return getValue(state)
+        return getValue(state), None
     v = float("inf")
+    for a in legalActions(state):
+        successor = getSuccessor(state, a)
+        v2, a2 = maxValue(successor)
+        if(v2 < v):
+            v = v2
+            action = a
+    
+    return v, action
+    '''
     successors = [getSuccessor(state, action) for action in legalActions(state)]
     for successor in successors:
         v = max(v, min_value(successor))
     return v
-
+    '''
 # TODO: finish computeNextAction from state values
-def computeNextAction(state):
-    actions = legalActions(state)
+def computeNextAction(state, player):
+    if(player == 'X'):
+        value, action = maxValue(state)
+        return action
+    else:
+        value, action = minValue(state)
+        return action
+
+def getPlayerMove(playerSymbol):
+    coord = input("Enter coordinates of move: ").split()
+    i = int(coord[0])
+    j = int(coord[1])
+    return (playerSymbol, i, j) 
+
+def printBoard(board):
+    print()
+    i = j = 0
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if(board[i][j] != None and j < len(board[0]) - 1):
+                print(board[i][j], end =" | ")
+            elif(board[i][j] != None):
+                print(board[i][j])
+            elif(board[i][j] == None and j < len(board[0]) - 1):
+                print("-", end =" | ")
+            else:
+                print("-")
+    print()
+
+def ticTacToe(player):
+    board = [ [ None for _ in range(3)] for _ in range(3)]
+    if(player == "X"):
+        terminal, winner = isTerminal(board)
+        while(not terminal):
+            printBoard(board)
+            print(board)
+            playerMove = getPlayerMove(player)
+            print(playerMove)
+            board = getSuccessor(board, playerMove)
+            if(terminal):
+                break
+            aiVal, aiMove = minValue(board)
+            board = getSuccessor(board, aiMove)
+            terminal, winner = isTerminal(board)
+        printBoard(board)
+        print(f"{winner} WINS!!!")
+    else:
+        terminal, winner = isTerminal(board)
+        while(not terminal):
+            aiVal, aiMove = minValue(board)
+            board = getSuccessor(board, aiMove)
+            printBoard(board)
+            terminal, winner = isTerminal(board)
+            if(terminal):
+                break
+            playerMove = getPlayerMove(player)
+            print(playerMove)
+            board = getSuccessor(board, playerMove)
+            terminal, winner = isTerminal(board)
+        printBoard(board)
+        print(f"{winner} WINS!!!")
+
+        
+
+ticTacToe("O")
     
-
-initialState = [ [ None for _ in range(3)] for _ in range(3)]
-
-
