@@ -11,15 +11,16 @@ during club meetings in sessions of 1-2 hours, and later
 improved and cleaned up.
 
 # How to play against the AI
-[tictactoe.py](./tictactoe.py)
-
-This is the main program. Contains the logic to manage the game between the AI and the player. 
-In this case the AI is a minimax agent, but it could potentially be replaced by a different 
-type of agent. Enter the following command in the terminal to play a game against the AI:
+First you need to have python installed on your device. Then download the files in this folder and, using your terminal navigate to the folder where you saved the files, and
+run the [tictactoe.py](./tictactoe.py) program by entering the following command on your terminal:
 
 ```
 python tictactoe.py
 ```
+
+This is the main program. Contains the logic to manage the game between the AI and the player. 
+In this case the AI is a [minimax](https://en.wikipedia.org/wiki/Minimax) agent, but it could potentially be replaced by a different 
+type of agent. The agent algorithm also uses [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) to optimize the minimax search.
 
 # How to make an AI of this type, step by step
 
@@ -32,8 +33,11 @@ Choose what features of the game are relevant for your purposes and figure out a
 
 In our case we defined the game state to be the board (a two-dimensional list), a turn counter (an integer), and a "dimension" variable (an integer) which represents the dimensions of the board and serves to define the turn counter. We could save more space by using a one-dimensional list and getting rid of the turn counter entirely, however since Tic Tac Toe is a very small and simple game we can afford to use little more space in order to make everything more convenient to work with and easier to understand. Formally, we can define our state space $S$ in the following manner:
 
-$$S = \{(B,t,d)\} $$ 
-Where $t, d \in \mathbb{Z}^+$, $0 \leq t \leq d^2$, and $B$ is a $d \times d$ list of strings
+$$
+S = \\{(B,t,d)\\} 
+$$ 
+
+Where $t, d \in \mathbb{Z}^+$, $0 \leq t \leq d^2$, and $B$ is a $d \times d$ list of strings $\in \\{ \text{"X", "O"}, \epsilon \\}$ where $\epsilon$ is the empty string.
 
 (You dont have to define it so rigurously, all you really need for implementation purposes is decide how to define it in your code. I am just trying to be thorough)
 ## 2. Define the Action Space:
@@ -42,9 +46,11 @@ The action space is the set of all actions in the game. So we first define what 
 
 In our case, since we defined our board to be a two-dimensional list and to take an action (make a move) in Tic Tac Toe you must place your corresponding symbol in an empty space on the board, we defined an action as a 3-tuple $(w, i, j)$ containing a string $w$ representing the symbol to be placed, and two integers $i$ and $j$ which are the indexes of where to place the symbol $w$ on the board (a two-dimensional list). Hence, we can formally define our action space $A$ in the following manner:
 
-$$A = \{(w, i, j)\}$$
+$$
+A = \\{(w, i, j)\\}
+$$
 
-Where $w \in\{$"X", "O", $\epsilon\}$, $\epsilon$ representing the empty string, $i,j \in \mathbb{Z}^+$ and $0 \leq i,j \leq d-1$
+Where $w \in \\{ \text{"X", "O"}, \epsilon \\} $, $\epsilon$ representing the empty string, $i,j \in \mathbb{Z}^{+}$ and $0 \leq i,j \leq d-1$
 
 ## 3. Create functions to extract information from the game and to allow the AI to interact with it:
 
@@ -71,16 +77,24 @@ returns a new game state which is the result of taking said action in said game 
 Formally, we need to define and differentiate the set of terminal states $S_T \in S$ and the set of non-terminal states $S_N \in S$, we also need to define a value function $V$, and we need to define a transition function $T$.
 
 Terminal and Non-terminal States definitions:
+
 $$
-S_T = \{(B,t,d) \in S \mid t=0 \text{ or there is a win on the board} \}\\
-S_N = S - S_T = \{(B,t,d) \in S \mid t > 0 \text{ and there is no win on the board}\}
+S_T = \\{(B,t,d) \in S \mid t=0 \text{ or there is a win on the board} \\}
 $$
+
+$$
+S_N = S - S_T = \\{(B,t,d) \in S \mid t > 0 \text{ and there is no win on the board}\\}
+$$
+
 Hence, the `isTerminal` function is just a way for us to test the membership of state to the set $S_T$. The set $S_T$ is not explicitly defined in the code because that is not feasible nor practical in any way, so to test if a state is a member of $S_T$ we instead check if the state meets the rules of a terminal state as defined above.
 
 We define a value only for terminal states since these are the only ones where there is a clear outcome for the AI. Thus, we define the value function as follows: 
 
 $$
-V: S_T \to \mathbb{R}\\
+V: S_T \to \mathbb{R}
+$$
+
+$$
 V(s_T) = \begin{cases}
         1 \quad \text{if "X" wins}\\
         0 \quad \text{if there is a tie}\\
@@ -91,10 +105,15 @@ $$
 This is exactly the `getValue` function in the implementation.
 
 We can only transition from a non-terminal state. Hence the input to our transition function $T$ must be an element in $S_N$:
+
 $$
-T: S_{N},A \to S\\
+T: S_{N},A \to S
+$$
+
+$$
 T(s_{N},a) = T ((B,t,d), (w,i,j)) = (B_{new}, t-1, d)
 $$
+
 Where $B_{new}[x][y] = B[x][y] \forall x,y$ except for  when $x = i, y = j$, in which case $B_{new}[i][j] = w$ and $B[i][j] = \epsilon$ (the empty string). If $B[i][j] \neq \epsilon$ then this function is undefined.
 
  This is what the `getSuccessor` function implements. Wherever the function is undefined, the `getSuccessor` function returns `None`.
@@ -102,14 +121,17 @@ Where $B_{new}[x][y] = B[x][y] \forall x,y$ except for  when $x = i, y = j$, in 
 With this, the agent implicitly defines a value function for non-terminal states (and by consequence the actions that lead to them) in the following way:
 
 $$
-V^*: S \to \mathbb{R}\\
-V^*(s) = \begin{cases}
+V_{AI}: S \to \mathbb{R}
+$$
+
+$$
+V_{AI}(s) = \begin{cases}
             V(s) \quad \quad \quad \quad \quad \quad \quad \text{if } s \in S_T\\
-            \text{max}_a(V^*(T(s,a))) \quad \text{if } s \in S_N \text{ and its the maximizer player's turn}\\
-            \text{min}_a(V^*(T(s,a))) \quad \text{if } s \in S_N \text{ and its the minimizer player's turn}\\
+            \max_{a} ( V_{AI} (T(s,a))) \quad \text{if } s \in S_N \text{ and its the maximizer player's turn}\\
+            \min_{a}(V_{AI} (T(s,a))) \quad \text{if } s \in S_N \text{ and its the minimizer player's turn}\\
         \end{cases}
 $$
 
-This is what the functions defined in the [minimaxAgent.py](./minimaxAgent.py) implement.
+This is what the functions defined in the [minimaxAgent.py](./minimaxAgent.py) file implement.
 
-Once this is done, all that is left to do (if it hadn't been done before or while developing the AI) is to make a way for the AI to interface with the game and the user, which is what the [tictactoe.py](./tictactoe.py) file implements
+Once this is done, all that is left to do (if it hadn't been done before or while developing the AI) is to make a way for the AI to interface with the game and the user, which is what the [tictactoe.py](./tictactoe.py) file implements. And also further optimize the AI using things such as [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) which is also implemented in the agent.
