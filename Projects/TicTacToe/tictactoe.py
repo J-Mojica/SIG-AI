@@ -1,5 +1,5 @@
 import tictactoeGame as game
-import minimaxAgent as AI
+import minimaxAgent as AI # Could be replaced by a different type of aget
 
 def tictactoe(player, dimension):
     gameState = game.GameState(dimension)

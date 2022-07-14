@@ -1,5 +1,5 @@
 '''
-This file contains the functions that make up a minimax agent for a two player game
+This file contains the functions that make up a minimax agent for a two player game.
 '''
 def maxValue(game, gameState, alpha, beta):
     '''
