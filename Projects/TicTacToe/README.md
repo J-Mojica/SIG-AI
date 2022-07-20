@@ -13,7 +13,7 @@ run the [tictactoe.py](./tictactoe.py) program by entering the following command
 python tictactoe.py
 ```
 
-This is the main program. Contains the logic to manage the game between the AI and the player. 
+This is the main program. It contains the logic to manage the game between the AI and the player. 
 In this case the AI is a [minimax](https://en.wikipedia.org/wiki/Minimax) agent, but it could potentially be replaced by a different 
 type of agent. The agent algorithm also uses [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) to optimize the minimax search.
 
