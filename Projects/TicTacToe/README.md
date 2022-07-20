@@ -32,7 +32,7 @@ $$
 S = \\{(B,t,d)\\} 
 $$ 
 
-Where $t \in \mathbb{Z}^+$, $d \in \\{2^n + 1 \mid n \in \mathbb{N}\\}\mathbb{N}$,  $0 \leq t \leq d^2$, and $B$ is a $d \times d$ list of strings $\in \\{ \text{"X", "O"}, \epsilon \\}$ where $\epsilon$ is the empty string.
+Where $t \in \mathbb{Z}^+$, $d \in \\{2^n + 1 \mid n \in \mathbb{N}\\}$,  $0 \leq t \leq d^2$, and $B$ is a $d \times d$ list of strings $\in \\{ \text{"X", "O"}, \epsilon \\}$ where $\epsilon$ is the empty string.
 
 (You dont have to define it so rigurously, all you really need for implementation purposes is decide how to define it in your code. I am just trying to be thorough)
 
@@ -49,7 +49,7 @@ $$
 A = \\{(w, i, j)\\}
 $$
 
-Where $w \in \\{ \text{"X", "O"}, \epsilon \\}$, $\epsilon$ representing the empty string, $i,j \in \mathbb{Z}^{+}$ and $0 \leq i,j \leq d-1$
+Where $w \in \\{X, O, \epsilon \\}$, $\epsilon$ representing the empty string, $i,j \in \mathbb{Z}^{+}$ and $0 \leq i,j \leq d-1$
 
 ## 3. Create functions to extract information from the game and to allow the AI to interact with it:
 
