@@ -85,7 +85,7 @@ $$
 S_N = S - S_T = \\{(B,t,d) \in S \mid t > 0 \text{ and there is no win on the board}\\}
 $$
 
-Hence, the `isTerminal` function is just a way for us to test the membership of state to the set $S_T$. The set $S_T$ is not explicitly defined in the code because that is not feasible nor practical in any way, so to test if a state is a member of $S_T$ we instead check if the state meets the rules of a terminal state as defined above.
+Hence, the `isTerminal` function is just a way for us to test the membership of a state to the set $S_T$. The set $S_T$ is not explicitly defined in the code because that is not feasible nor practical in any way, so to test if a state is a member of $S_T$ we instead check if the state meets the rules of a terminal state as defined above.
 
 We define a value only for terminal states since these are the only ones where there is a clear outcome for the AI. Thus, we define the value function as follows: 
 
@@ -133,4 +133,4 @@ $$
 
 This is what the functions defined in the [minimaxAgent.py](./minimaxAgent.py) file implement.
 
-Once this is done, all that is left to do (if it hadn't been done before or while developing the AI) is to make a way for the AI to interface with the game and the user, which is what the [tictactoe.py](./tictactoe.py) file implements. One can also add further improvements on the the AI using such as [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) once we have a working agent. Alpha-beta pruning, in short, is a way to discard undesireable branches of the minimax search tree without having to fully explore them. This can save some computation time. Alpha-beta pruning was also implemented on the agent's code.
+Once this is done, all that is left to do (if it hadn't been done before or while developing the AI) is to make a way for the AI to interface with the game and the user, which is what the [tictactoe.py](./tictactoe.py) file implements. One can also add further improvements on the the AI using tecniques such as [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) once we have a working agent. Alpha-beta pruning, in short, is a way to discard undesireable branches of the minimax search tree without having to fully explore them. This can save some computation time. Alpha-beta pruning was also implemented on the agent's code.
