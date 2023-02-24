@@ -26,7 +26,7 @@ def load_zeros_and_ones():
 
     # turn the images (matrices) into column vectors
     new_train_x_vectors = np.zeros((new_train_x.shape[0], new_train_x.shape[1]*new_train_x.shape[2], 1))
-    new_test_x_vectors = np.zeros((new_train_x.shape[0], new_train_x.shape[1]*new_train_x.shape[2], 1))
+    new_test_x_vectors = np.zeros((new_test_x.shape[0], new_test_x.shape[1]*new_test_x.shape[2], 1))
     for i in range(new_train_x.shape[0]):
         new_train_x_vectors[i] = matrix_to_vector(new_train_x[i])
     for i in range(new_test_x.shape[0]):
@@ -41,3 +41,8 @@ def matrix_to_vector(x):
 def vector_to_matrix(x):
     '''Convert a vector to a matrix'''
     return x.reshape(int(round(np.sqrt(x.shape[0]))),int(round(np.sqrt(x.shape[0]))))
+
+
+(x_train, y_train), (x_test, y_test) = load_zeros_and_ones()
+print(x_test.shape)
+print(y_test.shape)
